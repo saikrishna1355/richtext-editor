@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import {
   FaBold,
   FaItalic,
@@ -18,12 +18,38 @@ interface EditorProps {
 
 const Editor: React.FC<EditorProps> = ({ initialContent = "", onChange }) => {
   const editorRef = useRef<HTMLDivElement>(null);
-  const [htmlCode, setHtmlCode] = useState<string>(initialContent);
   const [showCode, setShowCode] = useState(true);
+  const [htmlCode, setHtmlCode] = useState<string>(initialContent);
 
-  // Initialize content on mount or when initialContent changes
+  // Save selection position
+  const saveSelection = () => {
+    const selection = window.getSelection();
+    return selection?.getRangeAt(0);
+  };
+
+  // Restore selection position
+  const restoreSelection = (range: Range | null) => {
+    if (!range) return;
+    const selection = window.getSelection();
+    if (selection) {
+      selection.removeAllRanges();
+      selection.addRange(range);
+    }
+  };
+
+  // Handle paste events to prevent cursor jumping
+  const handlePaste = (event: React.ClipboardEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    const range = saveSelection();
+    const text = event.clipboardData.getData("text/plain");
+    document.execCommand("insertText", false, text);
+    if (range) {
+      restoreSelection(range);
+    }
+  };
+
   useEffect(() => {
-    if (editorRef.current) {
+    if (editorRef.current && editorRef.current.innerHTML !== initialContent) {
       editorRef.current.innerHTML = initialContent;
     }
     setHtmlCode(initialContent);
@@ -32,8 +58,10 @@ const Editor: React.FC<EditorProps> = ({ initialContent = "", onChange }) => {
   const handleEditorInput = () => {
     if (editorRef.current) {
       const content = editorRef.current.innerHTML;
-      setHtmlCode(content);
-      onChange?.(content);
+      if (content !== htmlCode) {
+        setHtmlCode(content);
+        onChange?.(content);
+      }
     }
   };
 
@@ -50,83 +78,82 @@ const Editor: React.FC<EditorProps> = ({ initialContent = "", onChange }) => {
     document.execCommand(command, false, value);
   };
 
-  return (
-    <div>
-      {/* Main Grid */}
-      <div
-        className="main_layout"
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "2rem",
-        }}
-      >
-        {/* Rendered HTML */}
+  const buttonStyle = {
+    backgroundColor: "#f4f4f4",
+    border: "none",
+    borderRadius: "8px",
+    padding: "10px",
+    margin: "5px",
+    cursor: "pointer",
+    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+  };
 
-        <div className="text_editor">
-          <div
-            className="icon_bar"
-            style={{
-              marginBottom: "1rem",
-              display: "flex",
-              justifyContent: "space-between",
-            }}
+  return (
+    <div className="main_layout">
+      <div className="text_editor">
+        <div
+          className="icon_bar"
+          style={{
+            marginBottom: "1rem",
+          }}
+        >
+          <button
+            onClick={() => format("formatBlock", "<p>")}
+            style={buttonStyle}
           >
-            <button
-              onClick={() => format("formatBlock", "<p>")}
-              style={buttonStyle}
-            >
-              <FaParagraph />
-            </button>
-            <button onClick={() => format("bold")} style={buttonStyle}>
-              <FaBold />
-            </button>
-            <button onClick={() => format("italic")} style={buttonStyle}>
-              <FaItalic />
-            </button>
-            <button
-              onClick={() => format("insertUnorderedList")}
-              style={buttonStyle}
-            >
-              <FaListUl />
-            </button>
-            <button
-              onClick={() => format("formatBlock", "<h1>")}
-              style={buttonStyle}
-            >
-              <LuHeading1 />
-            </button>
-            <button
-              onClick={() => format("formatBlock", "<h2>")}
-              style={buttonStyle}
-            >
-              <LuHeading2 />
-            </button>
-            <button
-              onClick={() => format("createLink", "https://www.example.com")}
-              style={buttonStyle}
-            >
-              <FaLink />
-            </button>
-            <button onClick={() => setShowCode(!showCode)} style={buttonStyle}>
-              <FaCode />
-            </button>
-          </div>
-          <div
-            ref={editorRef}
-            contentEditable
-            suppressContentEditableWarning
-            onInput={handleEditorInput}
-            style={{
-              border: "1px solid #ccc",
-              minHeight: "200px",
-              padding: "1rem",
-              borderRadius: "8px",
-            }}
-          />
+            <FaParagraph />
+          </button>
+          <button onClick={() => format("bold")} style={buttonStyle}>
+            <FaBold />
+          </button>
+          <button onClick={() => format("italic")} style={buttonStyle}>
+            <FaItalic />
+          </button>
+          <button
+            onClick={() => format("insertUnorderedList")}
+            style={buttonStyle}
+          >
+            <FaListUl />
+          </button>
+          <button
+            onClick={() => format("formatBlock", "<h1>")}
+            style={buttonStyle}
+          >
+            <LuHeading1 />
+          </button>
+          <button
+            onClick={() => format("formatBlock", "<h2>")}
+            style={buttonStyle}
+          >
+            <LuHeading2 />
+          </button>
+          <button
+            onClick={() => format("createLink", "https://www.example.com")}
+            style={buttonStyle}
+          >
+            <FaLink />
+          </button>
+          <button onClick={() => setShowCode(!showCode)} style={buttonStyle}>
+            <FaCode />
+          </button>
         </div>
 
-        {/* HTML Code Editor */}
+        <div
+          ref={editorRef}
+          contentEditable
+          suppressContentEditableWarning
+          onInput={handleEditorInput}
+          onPaste={handlePaste}
+          style={{
+            border: "1px solid #ccc",
+            minHeight: "200px",
+            padding: "1rem",
+            borderRadius: "8px",
+            outline: "none",
+            marginBottom: "1rem",
+          }}
+        />
+
         {showCode && (
           <div className="html_code_editor">
             <textarea
@@ -148,16 +175,6 @@ const Editor: React.FC<EditorProps> = ({ initialContent = "", onChange }) => {
       </div>
     </div>
   );
-};
-
-const buttonStyle = {
-  backgroundColor: "#f4f4f4",
-  border: "none",
-  borderRadius: "8px",
-  padding: "10px",
-  margin: "5px",
-  cursor: "pointer",
-  boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
 };
 
 export default Editor;
