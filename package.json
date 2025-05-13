@@ -1,6 +1,6 @@
 {
   "name": "custom-rich-text-editor",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/types/index.d.ts",
@@ -10,13 +10,13 @@
   "author": "Sai Krishna M",
   "description": "A customizable React rich text editor with icon-based toolbar",
   "dependencies": {
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
     "react-icons": "^5.5.0"
   },
   "devDependencies": {
-    "@types/react": "^19.1.4",
-    "@types/react-dom": "^19.1.4",
+    "@types/react": "^18.1.4",
+    "@types/react-dom": "^18.1.4",
     "ts-loader": "^9.5.2",
     "typescript": "^5.8.3"
   },
