@@ -17,13 +17,13 @@ A customizable and user-friendly React text editor component, supporting rich te
 You can install the package via npm or yarn:
 
 ```bash
-npm install react-text-editor
+npm install custom-rich-text-editor
 ```
 
 or
 
 ```bash
-yarn add react-text-editor
+yarn add custom-rich-text-editor
 ```
 
 ---
