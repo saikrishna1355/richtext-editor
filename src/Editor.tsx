@@ -18,7 +18,7 @@ interface EditorProps {
 
 const Editor: React.FC<EditorProps> = ({ initialContent = "", onChange }) => {
   const editorRef = useRef<HTMLDivElement>(null);
-  const [showCode, setShowCode] = useState(true);
+  const [showCode, setShowCode] = useState(false);
   const [htmlCode, setHtmlCode] = useState<string>(initialContent);
 
   // Save selection position

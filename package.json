@@ -1,6 +1,6 @@
 {
   "name": "custom-rich-text-editor",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "main": "dist/index.cjs",
   "module": "dist/index.js",
   "types": "dist/types/index.d.ts",
@@ -24,7 +24,23 @@
     "react",
     "editor",
     "rich-text",
-    "component"
+    "component",
+    "rich-text-editor",
+    "react-editor",
+    "wysiwyg",
+    "html-editor",
+    "text-editor",
+    "typescript",
+    "react-component",
+    "custom-toolbar",
+    "contenteditable",
+    "npm-package",
+    "react-textarea",
+    "editor-component",
+    "react-html-editor",
+    "react-rich-text",
+    "custom-rich-text-editor",
+    "react-icons"
   ],
   "license": "MIT"
 }
