@@ -1,28 +1,47 @@
 ## React Text Editor
 
-A customizable and user-friendly React text editor component, supporting rich text editing, HTML code editing, and the ability to toggle between the two. This editor allows users to format text, create headings, add links, and more, directly from the UI or HTML code.
+[![npm version](https://img.shields.io/npm/v/custom-rich-text-editor.svg)](https://www.npmjs.com/package/custom-rich-text-editor)
+[![npm downloads](https://img.shields.io/npm/dm/custom-rich-text-editor.svg)](https://www.npmjs.com/package/custom-rich-text-editor)
+[![license: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-## Features
+A customizable and user-friendly WYSIWYG React text editor that lets you switch seamlessly between formatted content and raw HTML. Ideal for dashboards, CMS integrations, documentation tools, or any React app that needs rich text capabilities with full HTML control.
 
-- **Rich Text Formatting**: Bold, italic, unordered lists, headings, and more.
-- **HTML Code Editing**: Toggle between the rich text editor and raw HTML code view.
-- **Customizable**: Easily style and customize the component by targeting class names.
-- **Clipboard Handling**: Prevents cursor jumping during paste actions.
-- **Lightweight and Easy to Integrate**: Can be used in any React project.
+- **Keywords**: React rich text editor, WYSIWYG, HTML editor, content management, TypeScript ready, customizable toolbar.
 
 ---
 
-## Installation
+## Table of Contents
 
-You can install the package via npm or yarn:
+1. [Features at a Glance](#features-at-a-glance)
+2. [Quick Start](#quick-start)
+3. [Usage](#usage)
+4. [API](#api)
+5. [Styling Guide](#styling-guide)
+6. [FAQ](#faq)
+7. [Demo](#demo)
+8. [Contributing](#contributing)
+9. [License](#license)
+
+---
+
+## Features at a Glance
+
+- **Rich Text Formatting**: Apply bold, italic, headings, lists, and links without leaving the editor.
+- **HTML Code Editing**: Toggle to view or edit the underlying HTML markup instantly.
+- **TypeScript Support**: Fully typed props for safer integrations in TypeScript projects.
+- **Clipboard Handling**: Smart paste support that prevents cursor jumps and keeps formatting consistent.
+- **Customizable UI**: Swap icons, change layouts, or override styles via CSS class hooks.
+- **Framework Friendly**: Lightweight bundle that drops into existing React, Next.js, or Vite projects.
+
+---
+
+## Quick Start
+
+Install the package using your preferred package manager:
 
 ```bash
 npm install custom-rich-text-editor
-```
-
-or
-
-```bash
+# or
 yarn add custom-rich-text-editor
 ```
 
@@ -30,81 +49,78 @@ yarn add custom-rich-text-editor
 
 ## Usage
 
-### Basic Usage
+### Basic Example
 
 ```tsx
 import React, { useState } from "react";
 import Editor from "custom-rich-text-editor/dist/Editor";
 
 const App = () => {
-  const [content, setContent] = useState("");
-
-  const handleChange = (html: string) => {
-    setContent(html);
-  };
+  const [content, setContent] = useState("<p>Hello world!</p>");
 
   return (
-    <div>
-      <Editor initialContent={content} onChange={handleChange} />
-    </div>
+    <Editor
+      initialContent={content}
+      onChange={(html: string) => setContent(html)}
+    />
   );
 };
 
 export default App;
 ```
 
-### Props
+### Controlled Mode
 
-- **`initialContent`**: Initial HTML content to display in the editor (optional).
-- **`onChange`**: A callback function that fires when the content of the editor changes. The updated HTML is passed as an argument to this callback.
+The editor works in controlled mode, so you can persist content to a database or reuse it elsewhere in your app:
 
----
-
-## Available Commands
-
-- **Bold**
-- **Italic**
-- **Unordered List**
-- **Heading 1**
-- **Heading 2**
-- **Paragraph**
-- **Create Link**
+```tsx
+const handleSubmit = async () => {
+  await api.savePost({ body: content }); // store HTML
+};
+```
 
 ---
 
-## Customizing Styles
+## API
 
-You can customize the editor by modifying the class names in the component. Below are the main class names used:
+| Prop             | Type                     | Default | Description                                                                 |
+| ---------------- | ------------------------ | ------- | --------------------------------------------------------------------------- |
+| `initialContent` | `string`                 | `""`    | Optional starting HTML content.                                             |
+| `onChange`       | `(html: string) => void` | —       | Fired whenever the editor content changes. Receives the latest HTML string. |
 
-- **`main_layout`**: The outermost wrapper for the editor.
-- **`text_editor`**: The container for all text editor elements (including the toolbar and editor).
-- **`icon_bar`**: The toolbar containing buttons for formatting options.
-- **`html_code_editor`**: The area for HTML code editing when toggled.
+---
+
+## Styling Guide
+
+Override the provided class names to match your design system:
+
+- `main_layout`: Wraps the entire editor instance.
+- `text_editor`: Contains the toolbar and editable area.
+- `icon_bar`: Toolbar that hosts the formatting controls.
+- `html_code_editor`: `<textarea>` that appears in HTML mode.
+
+All controls use semantic buttons, so you can safely theme them with Tailwind, CSS Modules, or Styled Components.
+
+---
+
+## FAQ
+
+- **Can I extend the toolbar?** Yes. Fork the component or wrap it to inject additional buttons that target the same contenteditable area.
+- **Is server-side rendering supported?** The editor is safe to import in Next.js. Gate rendering behind a dynamic import if you rely on browser-only APIs.
+- **Does it support custom fonts?** Absolutely. Apply project fonts via CSS; the contenteditable area respects inherited styles.
 
 ---
 
 ## Demo
 
-You can view a live demo of the editor (https://text-editor-react-lovat.vercel.app/).
+Explore the live sandbox at [text-editor-react-lovat.vercel.app](https://text-editor-react-lovat.vercel.app/).
 
----
+## Contributing
 
-## GitHub Repository
-
-The source code is hosted on GitHub. You can find it (https://github.com/saikrishna1355/richtext-editor).
+We welcome enhancements, bug fixes, and new features. Open an issue to discuss ideas or submit a pull request.
 
 ---
 
 ## License
 
-This project is licensed under the MIT License.
-
----
-
-## Contribution
-
-Contributions are welcome! Please fork the repository and submit a pull request for any improvements or bug fixes.
-
-## Issues and Updates
-
-If you encounter any issues or have suggestions for improvements, feel free to open an issue in the GitHub repository. We welcome contributions and feedback to make this package even better!
+Released under the [MIT License](LICENSE).
