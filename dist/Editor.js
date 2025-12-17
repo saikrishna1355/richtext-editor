@@ -5,7 +5,7 @@ import { FaBold, FaItalic, FaListUl, FaLink, FaParagraph, FaCode, } from "react-
 import { LuHeading1, LuHeading2 } from "react-icons/lu";
 const Editor = ({ initialContent = "", onChange }) => {
     const editorRef = useRef(null);
-    const [showCode, setShowCode] = useState(true);
+    const [showCode, setShowCode] = useState(false);
     const [htmlCode, setHtmlCode] = useState(initialContent);
     // Save selection position
     const saveSelection = () => {
